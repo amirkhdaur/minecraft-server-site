@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body data-bs-theme="dark">
+    <div class="container">
+        <div class="d-flex flex-column align-items-center">
+            {% if status %}
+                <h1 class="mt-5">{{ status.description }}</h1>
+                <p class="fs-2 mt-5">
+                    {% if status.players.online %}
+                        Сейчас играют:
+                    {% else %}
+                        Никто не играет
+                    {% endif %}
+                </p>
+
+                {% if status.players.online %}
+                    {% for player in status.players.sample %}
+                        <p class="fs-4">{{ player }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <h1 class="mt-5">Сервер выключен</h1>
+            {% endif %}
+            <div class="d-flex justify-content-center mt-5">
+                <button class="btn fs-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-config" aria-expanded="false" aria-controls="collapse-config">
+                    Хостинг
+                </button>
+            </div>
+            <div class="collapse" id="collapse-config">
+                <div class="d-flex flex-column">
+                    <p class="fs-4">
+                        Статус: 
+                        <span class="fs-4 {% if server.status == 'on' %}text-success{% else %}text-danger{% endif %}">
+                            {% if server.status == 'on' %}
+                                Работает
+                            {% else %}
+                                Выключен
+                            {% endif %}
+                        </span>
+                    </p>
+                    <p class="fs-4">Количество ядер: {{ server.cpu }}</p>
+                    <p class="fs-4">Частота процессора: {{ server.cpu_frequency }} ГГц</p>
+                    <p class="fs-4">ОЗУ: {{ server.ram }} Мб</p>
+                    <p class="fs-4">Диск:</p>
+                    <div class="d-flex flex-column ms-3">
+                        <p class="fs-5">Размер: {{ server.disk.size }} Мб</p>
+                        <p class="fs-5">Использовано: {{ server.disk.used }} Мб</p>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: {{ (server.disk.used / server.disk.size) * 100 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

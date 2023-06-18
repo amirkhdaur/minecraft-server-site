@@ -1,0 +1,3 @@
+server/venv/
+server/.env
+docker-compose.yml
